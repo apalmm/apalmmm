@@ -5,15 +5,20 @@ import Card from "primevue/card";
 import Chip from "primevue/chip";
 import InputText from "primevue/inputtext";
 import SelectButton from "primevue/selectbutton";
+import { emptySpotifyTrack, getNowPlaying } from "./lib/spotify";
 import {
   AtSign,
   BookOpen,
   Box,
   BriefcaseBusiness,
-  Camera,
+  Disc3,
   ExternalLink,
-  Music2,
+  Gamepad2,
+  Github,
+  Linkedin,
+  Mail,
   Sparkles,
+  X,
 } from "lucide-vue-next";
 
 const activeSection = ref("Past Projects");
@@ -21,6 +26,31 @@ const command = ref("");
 const revealed = ref([]);
 const selectedModel = ref(null);
 const selectedModelView = ref(0);
+const activeDesktopWindow = ref(null);
+const spotifyTrack = ref({ ...emptySpotifyTrack });
+let spotifyTimer;
+
+const currentVibeTrack = {
+  connected: true,
+  isPlaying: false,
+  isVibe: true,
+  title: "Midnight Sun - Super Loud",
+  artist: "Zara Larsson",
+  album: "Midnight Sun (+ more)",
+  albumArt: "https://i.scdn.co/image/ab67616d0000b273ee8c1079ecfcf30f6836b9f7",
+  spotifyUrl: "https://open.spotify.com/track/69psOP7O7y7QOV0dVisyNk",
+};
+
+const displayedSpotifyTrack = computed(() => {
+  const track = spotifyTrack.value;
+  const hasLiveTrack =
+    track.connected &&
+    track.title !== "Nothing playing right now" &&
+    track.title !== emptySpotifyTrack.title &&
+    (track.spotifyUrl || track.albumArt || track.isPlaying);
+
+  return hasLiveTrack ? { ...track, isVibe: false } : currentVibeTrack;
+});
 
 const sections = ["Past Projects", "3D Modeling", "Education", "Bio"];
 const sectionTargets = {
@@ -31,8 +61,7 @@ const sectionTargets = {
 };
 
 const tickerOptions = [
-  "hire me please :) i'm a hard worker, forward thinking, and a team player",
-  "im really cool I promise, just look at my projects",
+  "im cool I promise, just look at my projects",
   "product engineering is the goalll",
   "im also proficient in system design, ask me about my backend work",
 ];
@@ -123,19 +152,75 @@ const degrees = [
   },
 ];
 
+const desktopApps = [
+  {
+    id: "hobbies",
+    label: "Hobbies",
+    icon: Gamepad2,
+  },
+  {
+    id: "spotify",
+    label: "Now Playing",
+    icon: Disc3,
+  },
+  {
+    id: "contact",
+    label: "Contact Card",
+    icon: Mail,
+  },
+];
+
+const desktopWindowTitles = {
+  hobbies: "after_hours.txt",
+  spotify: "spotify.signal",
+  contact: "contact.card",
+};
+
+const hobbies = [
+  {
+    name: "Roblox",
+    detail: "Worldbuilding, game systems, and low-poly environment work.",
+    links: [
+      {
+        label: "@apalmmmmm",
+        href: "https://www.roblox.com/users/35267779/profile",
+      },
+    ],
+  },
+  {
+    name: "Drawing",
+    detail: "Sketches, studies, concept art, and visual experiments.",
+    links: [{ label: "Add drawing archive", href: "" }],
+  },
+  {
+    name: "Coffee",
+    detail: "Favorite cafes, beans, rituals, and productive corners.",
+    links: [{ label: "Add coffee notes", href: "" }],
+  },
+  {
+    name: "Singing",
+    detail: "A place for recordings, performances, or favorite repertoire.",
+    links: [{ label: "Add singing clips", href: "" }],
+  },
+];
+
 const modelingPieces = [
   {
     title: "Not enough space",
     note: "Blender",
     image: "/modeling/week14_5.png",
+    webp: "/modeling/week14_5.webp",
+    alt: "Low-poly cyber sleep lab scene with server racks, bed, backpack, and glowing overhead light in a dark field.",
     views: [
       {
         label: "front view",
         image: "/modeling/week14_5.png",
+        webp: "/modeling/week14_5.webp",
       },
       {
         label: "wide view",
         image: "/modeling/week14_6.png",
+        webp: "/modeling/week14_6.webp",
       },
     ],
     palette: ["#74d8f6", "#fa5aa8", "#101827"],
@@ -145,51 +230,67 @@ const modelingPieces = [
     title: "Great Hall Interior",
     note: "The great hall, but make it low-poly. Focused on scale, mood, and triangle count.",
     image: "/modeling/blue.png",
+    webp: "/modeling/blue.webp",
+    alt: "Low-poly great hall interior with tall windows, hanging candles, warm wall lighting, and long banquet tables.",
     palette: ["#2b2455", "#d88734", "#111423"],
   },
   {
     title: "Campus Walkway",
     note: "An outdoor space with an emphasis on reusable assets and contrasting elements / textures.",
     image: "/modeling/green.png",
+    webp: "/modeling/green.webp",
+    alt: "Low-poly campus walkway with stylized trees, string lights, benches, and warm cobblestone path.",
     palette: ["#6bc04c", "#f2c13f", "#5eb6c4"],
   },
   {
     title: "The Slums",
     note: "A sunset urban scene with warm color grading also with a focus on contrasting materials and shapes.",
     image: "/modeling/orange.png",
+    webp: "/modeling/orange.webp",
+    alt: "Low-poly sunset urban rooftop scene with chain-link fence, glowing sign, and warm orange lighting.",
     palette: ["#ff7b24", "#f6c06b", "#6d3323"],
   },
   {
     title: "Hotel Lobby",
     note: "A moody interior lighting study with strong symmetry and stylized set dressing. Evil lair.",
     image: "/modeling/red.png",
+    webp: "/modeling/red.webp",
+    alt: "Low-poly red hotel lobby with glowing elevators, lounge chairs, pillars, and dramatic symmetrical lighting.",
     palette: ["#ff2b2b", "#7b0f15", "#1b0710"],
   },
   {
     title: "Wind Farm Terrain",
     note: "Landscape composition with working turbines, power lines, terrain, and winding fences. I used my fence plugin to quickly place fences across different terrain types.",
     image: "/modeling/turquoise.png",
+    webp: "/modeling/turquoise.webp",
+    alt: "Low-poly wind farm terrain with turbines, power lines, grassy hills, and winding fence paths.",
     palette: ["#5ed4e3", "#c4c356", "#37523e"],
   },
   {
     title: "Great Hall Detail",
     note: "Close-up pass emphasizing wall mounts and repeated architectural forms.",
     image: "/modeling/yellow.png",
+    webp: "/modeling/yellow.webp",
+    alt: "Low-poly great hall detail with deer wall mounts, warm golden light, tall windows, and long tables.",
     palette: ["#f3a72e", "#7a4b19", "#183240"],
   },
   {
     title: "Quiet Room",
     note: "Realistic room study with an emphasis on natural lighting, moody color grading, and material contrast.",
     image: "/modeling/week12_3png.png",
+    webp: "/modeling/week12_3png.webp",
+    alt: "Moody CRT room render with a hanging lamp, television static, table, chair, and green-tinted concrete walls.",
 
     views: [
       {
         label: "front view",
         image: "/modeling/week12_3png.png",
+        webp: "/modeling/week12_3png.webp",
       },
       {
         label: "wide view",
         image: "/modeling/week12_1.png",
+        webp: "/modeling/week12_1.webp",
       },
     ],
     palette: ["#c7d37a", "#273013", "#f04fc2"],
@@ -240,11 +341,34 @@ function activeModelImage(model = selectedModel.value) {
   return model?.views?.[selectedModelView.value]?.image || model?.image;
 }
 
+function activeModelWebp(model = selectedModel.value) {
+  return model?.views?.[selectedModelView.value]?.webp || model?.webp;
+}
+
+function openDesktopWindow(windowId) {
+  activeDesktopWindow.value =
+    activeDesktopWindow.value === windowId ? null : windowId;
+}
+
+function closeDesktopWindow() {
+  activeDesktopWindow.value = null;
+}
+
+async function refreshSpotifyTrack() {
+  try {
+    spotifyTrack.value = await getNowPlaying();
+  } catch {
+    spotifyTrack.value = { ...emptySpotifyTrack };
+  }
+}
+
 function handleKeydown(event) {
   if (event.key === "Escape") closeModel();
 }
 
 onMounted(() => {
+  refreshSpotifyTrack();
+  spotifyTimer = window.setInterval(refreshSpotifyTrack, 45000);
   revealOnScroll();
   requestAnimationFrame(revealOnScroll);
   window.setTimeout(revealOnScroll, 160);
@@ -253,6 +377,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  window.clearInterval(spotifyTimer);
   window.removeEventListener("scroll", revealOnScroll);
   window.removeEventListener("keydown", handleKeydown);
 });
@@ -285,14 +410,17 @@ watch(activeSection, async (section) => {
         <div class="profile-header"></div>
 
         <div class="photo-slot">
-          <img src="/profile_pic.jpg" alt="Profile photo" />
+          <picture>
+            <source srcset="/profile_pic.webp" type="image/webp" />
+            <img src="/profile_pic.jpg" alt="Aidan Palmer profile photo" />
+          </picture>
         </div>
 
         <div class="profile-copy">
           <p class="status">
             Yale CS / software engineer / interactive systems
           </p>
-          <h1>Aidan Palmer</h1>
+          <h2>Hi, i'm Aidan</h2>
           <p>
             I build full-stack projects, mobile experiences, online worlds, and
             neuroscience-oriented research tools.
@@ -352,6 +480,153 @@ watch(activeSection, async (section) => {
             </dl>
           </template>
         </Card>
+        <Card class="mini-desktop-card">
+          <template #title>
+            <span class="card-title desktop-title">My Desktop</span>
+          </template>
+          <template #content>
+            <div
+              class="mini-desktop"
+              :class="{ expanded: activeDesktopWindow }"
+              aria-label="Interactive desktop panel"
+            >
+              <div class="desktop-icons">
+                <button
+                  v-for="app in desktopApps"
+                  :key="app.id"
+                  type="button"
+                  :data-app="app.id"
+                  :class="{ active: activeDesktopWindow === app.id }"
+                  @click="openDesktopWindow(app.id)"
+                >
+                  <component :is="app.icon" :size="22" />
+                  <span>{{ app.label }}</span>
+                </button>
+              </div>
+
+              <article v-if="activeDesktopWindow" class="desktop-window">
+                <header>
+                  <span>{{ desktopWindowTitles[activeDesktopWindow] }}</span>
+                  <button
+                    type="button"
+                    aria-label="Close mini desktop window"
+                    @click="closeDesktopWindow"
+                  >
+                    <X :size="14" />
+                  </button>
+                </header>
+
+                <div v-if="activeDesktopWindow === 'hobbies'">
+                  <div class="hobby-list">
+                    <article v-for="hobby in hobbies" :key="hobby.name">
+                      <div>
+                        <h3>{{ hobby.name }}</h3>
+                        <p>{{ hobby.detail }}</p>
+                      </div>
+                      <div class="hobby-links">
+                        <template
+                          v-for="link in hobby.links"
+                          :key="`${hobby.name}-${link.label}`"
+                        >
+                          <a
+                            v-if="link.href"
+                            :href="link.href"
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            {{ link.label }}
+                          </a>
+                          <span v-else>{{ link.label }}</span>
+                        </template>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+
+                <div
+                  v-else-if="activeDesktopWindow === 'spotify'"
+                  class="spotify-widget"
+                >
+                  <div class="music-visual">
+                    <div class="album-cover">
+                      <img
+                        v-if="displayedSpotifyTrack.albumArt"
+                        :src="displayedSpotifyTrack.albumArt"
+                        :alt="`${displayedSpotifyTrack.album} album cover`"
+                      />
+                      <span v-else>vibe</span>
+                    </div>
+                    <div
+                      class="record-player"
+                      :class="{ playing: displayedSpotifyTrack.isPlaying }"
+                      aria-hidden="true"
+                    >
+                      <div class="record">
+                        <img
+                          v-if="displayedSpotifyTrack.albumArt"
+                          :src="displayedSpotifyTrack.albumArt"
+                          alt=""
+                        />
+                        <span v-else></span>
+                      </div>
+                      <div class="tonearm"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <small>{{
+                      displayedSpotifyTrack.isVibe
+                        ? "current vibe"
+                        : displayedSpotifyTrack.connected
+                          ? displayedSpotifyTrack.isPlaying
+                            ? "currently spinning"
+                            : "paused"
+                          : "spotify not connected yet"
+                    }}</small>
+                    <h3>{{ displayedSpotifyTrack.title }}</h3>
+                    <p>{{ displayedSpotifyTrack.artist }}</p>
+                    <span>{{ displayedSpotifyTrack.album }}</span>
+                    <a
+                      v-if="displayedSpotifyTrack.spotifyUrl"
+                      :href="displayedSpotifyTrack.spotifyUrl"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Open on Spotify
+                    </a>
+                  </div>
+                </div>
+
+                <div v-else class="contact-card-window">
+                  <p>
+                    Best places to reach me or see what I am building.
+                  </p>
+                  <div class="contact-card-links">
+                    <a href="mailto:aidan.palmer@yale.edu">
+                      <Mail :size="16" />
+                      <span>aidan.palmer@yale.edu</span>
+                    </a>
+                    <a
+                      href="https://github.com/apalmm"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <Github :size="16" />
+                      <span>github.com/apalmm</span>
+                    </a>
+                    <a
+                      href="https://www.linkedin.com/in/aidan-palmer-1003bb225/"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <Linkedin :size="16" />
+                      <span>linkedin.com/in/aidan-palmer</span>
+                    </a>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </template>
+        </Card>
         <!-- <Card>
           <template #title>
             <span class="card-title"><Sparkles :size="18" />Interests</span>
@@ -374,7 +649,8 @@ watch(activeSection, async (section) => {
           </template>
         </Card> -->
 
-        <!-- <Card class="terminal-card">
+        <!-- Guestbook parked here in case it comes back later.
+        <Card class="terminal-card">
           <template #title>Guestbook</template>
           <template #content>
             <small
@@ -396,7 +672,7 @@ watch(activeSection, async (section) => {
       <div class="main-column">
         <section id="projects" class="section-panel" data-reveal>
           <header class="section-heading">
-            <span><BriefcaseBusiness :size="20" /> Past Projects</span>
+            <h2><BriefcaseBusiness :size="20" /> Past Projects</h2>
             <Chip label="Featured" />
           </header>
 
@@ -440,7 +716,7 @@ watch(activeSection, async (section) => {
 
         <section id="modeling" class="section-panel modeling-panel" data-reveal>
           <header class="section-heading">
-            <span><Box :size="20" /> 3D Modeling</span>
+            <h2><Box :size="20" /> 3D Modeling</h2>
             <Chip label="Renders" />
           </header>
           <p class="modeling-intro">
@@ -465,7 +741,14 @@ watch(activeSection, async (section) => {
                 type="button"
                 @click="openModel(piece)"
               >
-                <img :src="piece.image" :alt="piece.title" loading="lazy" />
+                <picture>
+                  <source
+                    v-if="piece.webp"
+                    :srcset="piece.webp"
+                    type="image/webp"
+                  />
+                  <img :src="piece.image" :alt="piece.alt" loading="lazy" />
+                </picture>
               </button>
               <h3>{{ piece.title }}</h3>
               <div class="palette" aria-label="Render color palette">
@@ -489,7 +772,7 @@ watch(activeSection, async (section) => {
           data-reveal
         >
           <header class="section-heading">
-            <span><BookOpen :size="25" /> Education</span>
+            <h2><BookOpen :size="25" /> Education</h2>
           </header>
           <div class="yale-banner">
             <div>
@@ -512,7 +795,7 @@ watch(activeSection, async (section) => {
 
         <section id="bio" class="section-panel bio-panel" data-reveal>
           <header class="section-heading">
-            <span><AtSign :size="25" /> Bio</span>
+            <h2><AtSign :size="25" /> Bio</h2>
           </header>
           <p>
             I am a recent Yale computer science graduate and software engineer
@@ -568,7 +851,7 @@ watch(activeSection, async (section) => {
         '--c1': selectedModel.palette[0],
         '--c2': selectedModel.palette[1],
         '--c3': selectedModel.palette[2],
-        '--image': `url(${activeModelImage()})`,
+        '--image': `url(${activeModelWebp() || activeModelImage()})`,
       }"
       role="dialog"
       aria-modal="true"
@@ -585,7 +868,14 @@ watch(activeSection, async (section) => {
         >
           x
         </button>
-        <img :src="activeModelImage()" :alt="selectedModel.title" />
+        <picture>
+          <source
+            v-if="activeModelWebp()"
+            :srcset="activeModelWebp()"
+            type="image/webp"
+          />
+          <img :src="activeModelImage()" :alt="selectedModel.alt" />
+        </picture>
         <figcaption>
           <div>
             <p>low-poly render</p>
