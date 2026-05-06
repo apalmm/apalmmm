@@ -467,7 +467,7 @@ watch(activeSection, async (section) => {
             <dl class="details-list">
               <div>
                 <dt>Location</dt>
-                <dd>Morgantown, West Virginia</dd>
+                <dd>Morgantown, WV</dd>
               </div>
               <div>
                 <dt>Focus</dt>
