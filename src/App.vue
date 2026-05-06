@@ -48,7 +48,7 @@ const projects = [
   {
     title: "Yale Butteries",
     role: "Project Lead",
-    year: "2024 - 2025",
+    year: "2023 - 2025",
     description:
       "Led a team of four developers building an order-ahead mobile app for 14 student-run Yale restaurants, including REST APIs, payments coordination, and a React Native Redux interface.",
     tools: ["React Native", "Redux", "Node.js", "PostgreSQL", "Docker"],
@@ -58,16 +58,19 @@ const projects = [
     role: "Game Engineer",
     year: "2020 - 2024",
     description:
-      "Contributed game assets and programmed in-game experiences for Universal Studios Roblox, supporting monetized gameplay and helping the experience reach 80M+ player visits.",
+      "Contributed game assets and programmed in-game experiences for Universal Studios Roblox, supporting monetized gameplay and helping the experience reach 120M+ player visits.",
     tools: ["Roblox Studio", "TypeScript", "Blender", "Game Design"],
+    url: "https://www.roblox.com/games/523707617/Universal-Roblox-Theme-Park",
   },
   {
     title: "Intelligent Music Discovery Engine",
     role: "Full-Stack ML Project",
+    repo: "contemporary-songs",
     year: "2024",
     description:
       "Built a Spotify-powered recommendation service that maps legacy playlists to contemporary tracks using audio features and low-latency k-nearest-neighbor retrieval.",
     tools: ["Flask", "NumPy", "Scikit-learn", "Spotify API"],
+    url: "https://github.com/apalmm/contemporary-songs",
   },
   {
     title: "Neural Signal Analysis App",
