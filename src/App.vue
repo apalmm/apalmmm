@@ -50,7 +50,7 @@ const projects = [
     role: "Project Lead",
     year: "2023 - 2025",
     description:
-      "Led a team of four developers building an order-ahead mobile app for 14 student-run Yale restaurants, including REST APIs, payments coordination, and a React Native Redux interface.",
+      "Led a team of four developers building a full-stack order-ahead mobile app for 14 student-run Yale restaurants. Built custom REST API, Redux store, integrated payment system underneath a React Native interface.",
     tools: ["React Native", "Redux", "Node.js", "PostgreSQL", "Docker"],
   },
   {
@@ -77,7 +77,7 @@ const projects = [
     role: "Research Programming",
     year: "2025",
     description:
-      "Processed 1024+ EEG channels with MNE-Python and built internal tooling for cortical speech prosthetics research at Rockefeller Neuroscience Institute.",
+      "Processed 1024+ EEG channels with MNE-Python and built internal tooling for cortical speech prosthetics research at the Rockefeller Neuroscience Institute.",
     tools: ["Python", "MNE", "Deep Learning", "Signal Analysis"],
   },
   {
@@ -94,7 +94,7 @@ const projects = [
     role: "Open Source Tool",
     year: "2025 - 2026",
     description:
-      "Built a tool for visualizing and managing R package dependencies, combining Python, R, and JavaScript to make package relationships easier to inspect.",
+      "Built a tool for visualizing and managing R package dependencies at the function-level, combining Python, R, and JavaScript to make package relationships easier to inspect.",
     tools: ["Python", "R", "JavaScript", "Dependency Graphs"],
     url: "https://github.com/apalmm/manage-deps",
   },
