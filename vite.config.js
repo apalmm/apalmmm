@@ -81,6 +81,7 @@ function spotifyDevApi(env) {
         const accessToken = await getSpotifyAccessToken(env);
 
         response.setHeader("Content-Type", "application/json");
+        response.setHeader("Cache-Control", "no-store, max-age=0");
 
         if (!accessToken) {
           response.end(JSON.stringify(fallbackTrack()));
