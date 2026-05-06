@@ -30,6 +30,7 @@ const selectedModelView = ref(0);
 const activeDesktopWindow = ref(null);
 const selectedDrawing = ref(0);
 const selectedDrawingPreview = ref(null);
+const selectedBook = ref(0);
 const spotifyTrack = ref({ ...emptySpotifyTrack });
 let spotifyTimer;
 
@@ -192,9 +193,14 @@ const hobbies = [
   },
   // {
   //   name: "Drawing",
-  //   detail: "Sketches, studies, concept art, and visual experiments.",
+  //   detail: "Sketches, ink studies, creatures, and visual experiments.",
   //   links: [],
   // },
+  {
+    name: "Currently Reading",
+    detail: "",
+    links: [],
+  },
   // {
   //   name: "Coffee",
   //   detail: "Favorite cafes, beans, rituals, and productive corners.",
@@ -207,21 +213,71 @@ const hobbies = [
   // },
 ];
 
+const books = [
+  {
+    title: "The Secret of Secrets",
+    author: "Dan Brown",
+    status: "reading",
+    detail: "",
+    cover:
+      "https://covers.openlibrary.org/b/isbn/9780385546898-M.jpg?default=false",
+  },
+  {
+    title: "The Devil in the White City",
+    author: "Erik Larson",
+    status: "reading",
+    detail: "",
+    cover:
+      "https://covers.openlibrary.org/b/isbn/9780375725609-M.jpg?default=false",
+  },
+  {
+    title: "The Demon of Unrest",
+    author: "Erik Larson",
+    status: "reading",
+    detail: "",
+    cover:
+      "https://covers.openlibrary.org/b/isbn/9780385348744-M.jpg?default=false",
+  },
+  {
+    title: "The Society of Mind",
+    author: "Marvin Minsky",
+    status: "reading",
+    detail: "",
+    cover:
+      "https://covers.openlibrary.org/b/isbn/9780671657130-M.jpg?default=false",
+  },
+];
+
 const drawings = [
   {
-    title: "Portrait Study",
-    note: "Add a scan, photo, or digital drawing here.",
-    image: "",
+    title: "Floral Window",
+    note: "Ink pattern study with a fractured frame, flowers, and dense linework.",
+    image: "/drawings/floral-window.jpg",
+    webp: "/drawings/floral-window.webp",
   },
   {
-    title: "Character Sketch",
-    note: "A place for a figure, character, or costume drawing.",
-    image: "",
+    title: "Urban Owl",
+    note: "A tilted city-and-nature composition with an owl tucked into the linework.",
+    image: "/drawings/urban-owl.jpg",
+    webp: "/drawings/urban-owl.webp",
   },
   {
-    title: "Environment Idea",
-    note: "Concept art, rooms, places, or visual worldbuilding.",
-    image: "",
+    title: "Dragon Study",
+    note: "Creature anatomy, scales, and sharp black ink texture.",
+    image: "/drawings/dragon-study.jpg",
+    webp: "/drawings/dragon-study.webp",
+  },
+  {
+    title: "Mirror Creature",
+    note: "Symmetric masks, branching forms, and surreal creature linework.",
+    image: "/drawings/mirror-creature.jpg",
+    webp: "/drawings/mirror-creature.webp",
+  },
+  {
+    title: "King Collage",
+    note: "Dense collage-style ink world with faces, symbols, and city shapes.",
+    image: "/drawings/king-collage.jpg",
+    webp: "/drawings/king-collage.webp",
   },
 ];
 
@@ -400,7 +456,7 @@ function handleKeydown(event) {
 
 onMounted(() => {
   refreshSpotifyTrack();
-  spotifyTimer = window.setInterval(refreshSpotifyTrack, 45000);
+  spotifyTimer = window.setInterval(refreshSpotifyTrack, 20000);
   revealOnScroll();
   requestAnimationFrame(revealOnScroll);
   window.setTimeout(revealOnScroll, 160);
@@ -587,11 +643,14 @@ watch(activeSection, async (section) => {
                             :class="{ active: selectedDrawing === index }"
                             @click="selectedDrawing = index"
                           >
-                            <img
-                              v-if="drawing.image"
-                              :src="drawing.image"
-                              :alt="drawing.title"
-                            />
+                            <picture v-if="drawing.image">
+                              <source
+                                v-if="drawing.webp"
+                                :srcset="drawing.webp"
+                                type="image/webp"
+                              />
+                              <img :src="drawing.image" :alt="drawing.title" />
+                            </picture>
                             <FileImage v-else :size="21" />
                             <span>{{ drawing.title }}</span>
                           </button>
@@ -601,11 +660,17 @@ watch(activeSection, async (section) => {
                           type="button"
                           @click="openDrawing(drawings[selectedDrawing])"
                         >
-                          <img
-                            v-if="drawings[selectedDrawing].image"
-                            :src="drawings[selectedDrawing].image"
-                            :alt="drawings[selectedDrawing].title"
-                          />
+                          <picture v-if="drawings[selectedDrawing].image">
+                            <source
+                              v-if="drawings[selectedDrawing].webp"
+                              :srcset="drawings[selectedDrawing].webp"
+                              type="image/webp"
+                            />
+                            <img
+                              :src="drawings[selectedDrawing].image"
+                              :alt="drawings[selectedDrawing].title"
+                            />
+                          </picture>
                           <div v-else>
                             <FileImage :size="28" />
                           </div>
@@ -616,6 +681,35 @@ watch(activeSection, async (section) => {
                             <span>{{ drawings[selectedDrawing].note }}</span>
                           </figcaption>
                         </button>
+                      </div>
+                      <div
+                        v-if="hobby.name === 'Currently Reading'"
+                        class="reading-panel"
+                      >
+                        <div class="book-shelf">
+                          <button
+                            v-for="(book, index) in books"
+                            :key="book.title"
+                            type="button"
+                            class="book-card"
+                            :class="{ active: selectedBook === index }"
+                            :aria-label="`${book.title} by ${book.author}`"
+                            @click="selectedBook = index"
+                          >
+                            <img
+                              :src="book.cover"
+                              :alt="`${book.title} cover`"
+                            />
+                          </button>
+                        </div>
+                        <article class="book-detail">
+                          <div>
+                            <span>{{ books[selectedBook].status }}</span>
+                            <h4>{{ books[selectedBook].title }}</h4>
+                            <p>{{ books[selectedBook].author }}</p>
+                          </div>
+                          <p>{{ books[selectedBook].detail }}</p>
+                        </article>
                       </div>
                     </article>
                   </div>
@@ -1002,11 +1096,17 @@ watch(activeSection, async (section) => {
         >
           x
         </button>
-        <img
-          v-if="selectedDrawingPreview.image"
-          :src="selectedDrawingPreview.image"
-          :alt="selectedDrawingPreview.title"
-        />
+        <picture v-if="selectedDrawingPreview.image">
+          <source
+            v-if="selectedDrawingPreview.webp"
+            :srcset="selectedDrawingPreview.webp"
+            type="image/webp"
+          />
+          <img
+            :src="selectedDrawingPreview.image"
+            :alt="selectedDrawingPreview.title"
+          />
+        </picture>
         <div v-else class="drawing-placeholder-large">
           <FileImage :size="76" />
         </div>

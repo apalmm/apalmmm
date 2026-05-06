@@ -717,6 +717,83 @@ h1 {
   border-style: dashed;
 }
 
+.reading-panel {
+  display: grid;
+  gap: 10px;
+}
+
+.book-shelf {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.hobby-list .book-card {
+  min-width: 0;
+  display: block;
+  padding: 0;
+  border: 1px solid rgba(237, 244, 255, 0.12);
+  background:
+    linear-gradient(135deg, rgba(185, 151, 91, 0.1), transparent 58%),
+    rgba(8, 12, 24, 0.46);
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.hobby-list .book-card:hover,
+.hobby-list .book-card.active {
+  transform: translateY(-2px);
+  border-color: rgba(185, 151, 91, 0.42);
+  box-shadow: 0 0 0 1px rgba(185, 151, 91, 0.22);
+}
+
+.book-card img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  display: block;
+  object-fit: cover;
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28);
+}
+
+.book-detail {
+  display: grid;
+  gap: 7px;
+  padding: 9px;
+  border: 1px solid rgba(185, 151, 91, 0.2);
+  background:
+    linear-gradient(135deg, rgba(185, 151, 91, 0.12), transparent 58%),
+    rgba(3, 5, 12, 0.42);
+}
+
+.book-detail span {
+  display: inline-block;
+  margin-bottom: 4px;
+  color: var(--gold);
+  font-family: "Courier New", monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.book-detail h4 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.9rem;
+  line-height: 1.1;
+}
+
+.book-detail p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.35;
+}
+
 .drawing-picker {
   display: grid;
   gap: 9px;
@@ -753,9 +830,15 @@ h1 {
   color: var(--green);
 }
 
-.drawing-icons img {
+.drawing-icons picture {
   width: 30px;
   aspect-ratio: 1;
+  display: block;
+}
+
+.drawing-icons img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   border: 1px solid rgba(237, 244, 255, 0.18);
 }
@@ -795,15 +878,20 @@ h1 {
   background: rgba(79, 209, 183, 0.08);
 }
 
-.drawing-preview > img,
+.drawing-preview > picture,
 .drawing-preview > div {
   width: 72px;
   aspect-ratio: 1;
   display: grid;
   place-items: center;
-  object-fit: cover;
   background: rgba(255, 255, 255, 0.055);
   border: 1px solid rgba(237, 244, 255, 0.14);
+}
+
+.drawing-preview > picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .drawing-preview svg {
@@ -844,6 +932,19 @@ h1 {
 
 .drawing-lightbox-panel {
   max-height: min(82vh, 820px);
+}
+
+.drawing-lightbox-panel picture {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.drawing-lightbox-panel picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: rgba(3, 5, 12, 0.56);
 }
 
 .drawing-placeholder-large {
