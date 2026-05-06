@@ -285,7 +285,7 @@ watch(activeSection, async (section) => {
         <div class="profile-header"></div>
 
         <div class="photo-slot">
-          <!-- <img :src="modeling / profilepicpixel.png" alt="Profile photo" /> -->
+          <img :src="'/profile_pic.jpg'" alt="Profile photo" />
         </div>
 
         <div class="profile-copy">
@@ -294,9 +294,8 @@ watch(activeSection, async (section) => {
           </p>
           <h1>Aidan Palmer</h1>
           <p>
-            I build full-stack products, mobile experiences, games, and research
-            tools. My work spans Yale Butteries, Roblox 3D environments, MLB
-            mobile/VR, startup engineering, and neuroscience programming.
+            I build full-stack projects, mobile experiences, online worlds, and
+            neuroscience-oriented research tools.
           </p>
         </div>
       </div>
@@ -348,7 +347,7 @@ watch(activeSection, async (section) => {
               </div>
               <div>
                 <dt>Stack</dt>
-                <dd>JavaScript, Python, C/C++, Swift</dd>
+                <dd>JavaScript, Python, C++/C#, Swift</dd>
               </div>
             </dl>
           </template>
@@ -490,7 +489,7 @@ watch(activeSection, async (section) => {
           data-reveal
         >
           <header class="section-heading">
-            <span><BookOpen :size="20" /> Education</span>
+            <span><BookOpen :size="25" /> Education</span>
           </header>
           <div class="yale-banner">
             <div>
@@ -505,7 +504,7 @@ watch(activeSection, async (section) => {
               class="degree-card"
             >
               <span>{{ degree.date }}</span>
-              <h3>{{ degree.title }}</h3>
+              <h2>{{ degree.title }}</h2>
               <p>{{ degree.detail }}</p>
             </article>
           </div>
