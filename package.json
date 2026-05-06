@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1"
+  },
+  "dependencies": {
+    "@primeuix/themes": "^2.0.3",
+    "@vitejs/plugin-vue": "latest",
+    "lucide-vue-next": "^1.0.0",
+    "primevue": "^4.5.5",
+    "vite": "latest",
+    "vue": "latest"
+  }
+}
