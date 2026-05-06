@@ -467,7 +467,7 @@ watch(activeSection, async (section) => {
             <dl class="details-list">
               <div>
                 <dt>Location</dt>
-                <dd>New Haven, CT</dd>
+                <dd>Morgantown, West Virginia</dd>
               </div>
               <div>
                 <dt>Focus</dt>
@@ -597,9 +597,7 @@ watch(activeSection, async (section) => {
                 </div>
 
                 <div v-else class="contact-card-window">
-                  <p>
-                    Best places to reach me or see what I am building.
-                  </p>
+                  <p>Best places to reach me or see what I am building.</p>
                   <div class="contact-card-links">
                     <a href="mailto:aidan.palmer@yale.edu">
                       <Mail :size="16" />
