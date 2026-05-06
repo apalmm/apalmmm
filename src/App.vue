@@ -187,21 +187,21 @@ const hobbies = [
       },
     ],
   },
-  {
-    name: "Drawing",
-    detail: "Sketches, studies, concept art, and visual experiments.",
-    links: [{ label: "Add drawing archive", href: "" }],
-  },
-  {
-    name: "Coffee",
-    detail: "Favorite cafes, beans, rituals, and productive corners.",
-    links: [{ label: "Add coffee notes", href: "" }],
-  },
-  {
-    name: "Singing",
-    detail: "A place for recordings, performances, or favorite repertoire.",
-    links: [{ label: "Add singing clips", href: "" }],
-  },
+  // {
+  //   name: "Drawing",
+  //   detail: "Sketches, studies, concept art, and visual experiments.",
+  //   links: [{ label: "Add drawing archive", href: "" }],
+  // },
+  // {
+  //   name: "Coffee",
+  //   detail: "Favorite cafes, beans, rituals, and productive corners.",
+  //   links: [{ label: "Add coffee notes", href: "" }],
+  // },
+  // {
+  //   name: "Singing",
+  //   detail: "A place for recordings, performances, or favorite repertoire.",
+  //   links: [{ label: "Add singing clips", href: "" }],
+  // },
 ];
 
 const modelingPieces = [
