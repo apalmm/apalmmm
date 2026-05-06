@@ -13,6 +13,7 @@ import {
   BriefcaseBusiness,
   Disc3,
   ExternalLink,
+  FileImage,
   Gamepad2,
   Github,
   Linkedin,
@@ -27,6 +28,8 @@ const revealed = ref([]);
 const selectedModel = ref(null);
 const selectedModelView = ref(0);
 const activeDesktopWindow = ref(null);
+const selectedDrawing = ref(0);
+const selectedDrawingPreview = ref(null);
 const spotifyTrack = ref({ ...emptySpotifyTrack });
 let spotifyTimer;
 
@@ -171,15 +174,15 @@ const desktopApps = [
 ];
 
 const desktopWindowTitles = {
-  hobbies: "after_hours.txt",
-  spotify: "spotify.signal",
-  contact: "contact.card",
+  hobbies: "after_hours",
+  spotify: "spotify",
+  contact: "contact",
 };
 
 const hobbies = [
   {
     name: "Roblox",
-    detail: "Worldbuilding, game systems, and low-poly environment work.",
+    detail: "",
     links: [
       {
         label: "@apalmmmmm",
@@ -190,7 +193,7 @@ const hobbies = [
   // {
   //   name: "Drawing",
   //   detail: "Sketches, studies, concept art, and visual experiments.",
-  //   links: [{ label: "Add drawing archive", href: "" }],
+  //   links: [],
   // },
   // {
   //   name: "Coffee",
@@ -202,6 +205,24 @@ const hobbies = [
   //   detail: "A place for recordings, performances, or favorite repertoire.",
   //   links: [{ label: "Add singing clips", href: "" }],
   // },
+];
+
+const drawings = [
+  {
+    title: "Portrait Study",
+    note: "Add a scan, photo, or digital drawing here.",
+    image: "",
+  },
+  {
+    title: "Character Sketch",
+    note: "A place for a figure, character, or costume drawing.",
+    image: "",
+  },
+  {
+    title: "Environment Idea",
+    note: "Concept art, rooms, places, or visual worldbuilding.",
+    image: "",
+  },
 ];
 
 const modelingPieces = [
@@ -235,7 +256,7 @@ const modelingPieces = [
     palette: ["#2b2455", "#d88734", "#111423"],
   },
   {
-    title: "Campus Walkway",
+    title: "Low-poly Park",
     note: "An outdoor space with an emphasis on reusable assets and contrasting elements / textures.",
     image: "/modeling/green.png",
     webp: "/modeling/green.webp",
@@ -243,7 +264,7 @@ const modelingPieces = [
     palette: ["#6bc04c", "#f2c13f", "#5eb6c4"],
   },
   {
-    title: "The Slums",
+    title: '"The Slums"',
     note: "A sunset urban scene with warm color grading also with a focus on contrasting materials and shapes.",
     image: "/modeling/orange.png",
     webp: "/modeling/orange.webp",
@@ -337,6 +358,14 @@ function closeModel() {
   selectedModel.value = null;
 }
 
+function openDrawing(drawing) {
+  selectedDrawingPreview.value = drawing;
+}
+
+function closeDrawing() {
+  selectedDrawingPreview.value = null;
+}
+
 function activeModelImage(model = selectedModel.value) {
   return model?.views?.[selectedModelView.value]?.image || model?.image;
 }
@@ -363,7 +392,10 @@ async function refreshSpotifyTrack() {
 }
 
 function handleKeydown(event) {
-  if (event.key === "Escape") closeModel();
+  if (event.key === "Escape") {
+    closeModel();
+    closeDrawing();
+  }
 }
 
 onMounted(() => {
@@ -422,8 +454,8 @@ watch(activeSection, async (section) => {
           </p>
           <h2>Hi, i'm Aidan</h2>
           <p>
-            I build full-stack projects, mobile experiences, online worlds, and
-            neuroscience-oriented research tools.
+            I build full-stack projects, systems, online games, and
+            neuroscience-focused research tools.
           </p>
         </div>
       </div>
@@ -431,10 +463,11 @@ watch(activeSection, async (section) => {
       <div class="intro-panel" data-reveal>
         <h2>Full-stack software, games, and research tools.</h2>
         <p>
-          I am a recent Yale computer science graduate building mobile apps,
-          immersive game environments, startup interfaces, and experimental
-          research software with a product-minded edge.
+          I am a recent Yale computer science graduate who loves to create
+          mobile apps, design in 3D, and ship software with a heavy
+          product-minded edge.
         </p>
+        <p>Let's connect!</p>
         <div class="hero-actions">
           <Button label="Past Projects" as="a" href="#projects" />
           <Button
@@ -466,15 +499,15 @@ watch(activeSection, async (section) => {
           <template #content>
             <dl class="details-list">
               <div>
-                <dt>Location</dt>
+                <dt>From</dt>
                 <dd>Morgantown, WV</dd>
               </div>
               <div>
                 <dt>Focus</dt>
-                <dd>Full-stack, mobile, games, research</dd>
+                <dd>Full-stack, systems, games, research</dd>
               </div>
               <div>
-                <dt>Stack</dt>
+                <dt>Main Stack</dt>
                 <dd>JavaScript, Python, C++/C#, Swift</dd>
               </div>
             </dl>
@@ -539,6 +572,51 @@ watch(activeSection, async (section) => {
                           <span v-else>{{ link.label }}</span>
                         </template>
                       </div>
+                      <div
+                        v-if="hobby.name === 'Drawing'"
+                        class="drawing-picker"
+                      >
+                        <div
+                          class="drawing-icons"
+                          aria-label="Drawing selector"
+                        >
+                          <button
+                            v-for="(drawing, index) in drawings"
+                            :key="drawing.title"
+                            type="button"
+                            :class="{ active: selectedDrawing === index }"
+                            @click="selectedDrawing = index"
+                          >
+                            <img
+                              v-if="drawing.image"
+                              :src="drawing.image"
+                              :alt="drawing.title"
+                            />
+                            <FileImage v-else :size="21" />
+                            <span>{{ drawing.title }}</span>
+                          </button>
+                        </div>
+                        <button
+                          class="drawing-preview"
+                          type="button"
+                          @click="openDrawing(drawings[selectedDrawing])"
+                        >
+                          <img
+                            v-if="drawings[selectedDrawing].image"
+                            :src="drawings[selectedDrawing].image"
+                            :alt="drawings[selectedDrawing].title"
+                          />
+                          <div v-else>
+                            <FileImage :size="28" />
+                          </div>
+                          <figcaption>
+                            <strong>{{
+                              drawings[selectedDrawing].title
+                            }}</strong>
+                            <span>{{ drawings[selectedDrawing].note }}</span>
+                          </figcaption>
+                        </button>
+                      </div>
                     </article>
                   </div>
                 </div>
@@ -575,10 +653,10 @@ watch(activeSection, async (section) => {
                   <div>
                     <small>{{
                       displayedSpotifyTrack.isVibe
-                        ? "current vibe"
+                        ? "Listening to"
                         : displayedSpotifyTrack.connected
                           ? displayedSpotifyTrack.isPlaying
-                            ? "currently spinning"
+                            ? "playing"
                             : "paused"
                           : "spotify not connected yet"
                     }}</small>
@@ -597,7 +675,6 @@ watch(activeSection, async (section) => {
                 </div>
 
                 <div v-else class="contact-card-window">
-                  <p>Best places to reach me or see what I am building.</p>
                   <div class="contact-card-links">
                     <a href="mailto:aidan.palmer@yale.edu">
                       <Mail :size="16" />
@@ -796,12 +873,13 @@ watch(activeSection, async (section) => {
             <h2><AtSign :size="25" /> Bio</h2>
           </header>
           <p>
-            I am a recent Yale computer science graduate and software engineer
-            who likes projects with a real-world surface area: mobile apps
-            people use, game environments people explore, and research tools
-            that help teams reason through complex data.<br /><br />
-            Would love to connect!
+            West Virginia born and raised, I am a recent Yale computer science
+            graduate and software engineer who likes projects with a real-world
+            applications: mobile apps people use, game environments people
+            explore, and research tools that help teams reason through complex
+            data.
           </p>
+          <p>Looking forward to connecting!</p>
           <div class="bio-actions">
             <Button
               label="Open Resume"
@@ -901,6 +979,42 @@ watch(activeSection, async (section) => {
               :key="`active-${color}`"
               :style="{ background: color }"
             ></span>
+          </div>
+        </figcaption>
+      </figure>
+    </div>
+
+    <div
+      v-if="selectedDrawingPreview"
+      class="model-lightbox drawing-lightbox"
+      role="dialog"
+      aria-modal="true"
+      :aria-label="selectedDrawingPreview.title"
+      @click.self="closeDrawing"
+    >
+      <div class="lightbox-backdrop drawing-backdrop"></div>
+      <figure class="lightbox-panel drawing-lightbox-panel">
+        <button
+          class="lightbox-close"
+          type="button"
+          aria-label="Close drawing preview"
+          @click="closeDrawing"
+        >
+          x
+        </button>
+        <img
+          v-if="selectedDrawingPreview.image"
+          :src="selectedDrawingPreview.image"
+          :alt="selectedDrawingPreview.title"
+        />
+        <div v-else class="drawing-placeholder-large">
+          <FileImage :size="76" />
+        </div>
+        <figcaption>
+          <div>
+            <p>drawing archive</p>
+            <h2>{{ selectedDrawingPreview.title }}</h2>
+            <span>{{ selectedDrawingPreview.note }}</span>
           </div>
         </figcaption>
       </figure>

@@ -717,6 +717,145 @@ h1 {
   border-style: dashed;
 }
 
+.drawing-picker {
+  display: grid;
+  gap: 9px;
+}
+
+.drawing-icons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.drawing-icons button {
+  min-width: 0;
+  min-height: 78px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 6px;
+  padding: 7px 4px;
+  border: 1px solid rgba(237, 244, 255, 0.14);
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.045);
+  cursor: pointer;
+  font: inherit;
+}
+
+.drawing-icons button.active,
+.drawing-icons button:hover {
+  border-color: rgba(79, 209, 183, 0.46);
+  background: rgba(79, 209, 183, 0.1);
+}
+
+.drawing-icons svg {
+  color: var(--green);
+}
+
+.drawing-icons img {
+  width: 30px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border: 1px solid rgba(237, 244, 255, 0.18);
+}
+
+.drawing-icons span {
+  width: 100%;
+  color: rgba(237, 244, 255, 0.76);
+  font-family: "Courier New", monospace;
+  font-size: 0.64rem;
+  line-height: 1.05;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.drawing-preview {
+  width: 100%;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 9px;
+  color: inherit;
+  border: 1px solid rgba(79, 209, 183, 0.24);
+  background: rgba(8, 12, 24, 0.42);
+  cursor: pointer;
+  text-align: left;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.drawing-preview:hover {
+  transform: translateY(-2px);
+  border-color: rgba(79, 209, 183, 0.48);
+  background: rgba(79, 209, 183, 0.08);
+}
+
+.drawing-preview > img,
+.drawing-preview > div {
+  width: 72px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  object-fit: cover;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(237, 244, 255, 0.14);
+}
+
+.drawing-preview svg {
+  color: var(--green);
+}
+
+.drawing-preview figcaption {
+  display: grid;
+  gap: 4px;
+}
+
+.drawing-preview strong {
+  color: var(--ink);
+  font-size: 0.86rem;
+}
+
+.drawing-preview span {
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.35;
+}
+
+.drawing-lightbox {
+  background:
+    radial-gradient(circle at 22% 18%, rgba(79, 209, 183, 0.22), transparent 28%),
+    radial-gradient(circle at 82% 22%, rgba(199, 125, 255, 0.2), transparent 30%),
+    rgba(5, 7, 16, 0.84);
+}
+
+.drawing-backdrop {
+  background:
+    linear-gradient(90deg, rgba(79, 209, 183, 0.08) 1px, transparent 1px),
+    linear-gradient(rgba(199, 125, 255, 0.08) 1px, transparent 1px),
+    rgba(8, 12, 24, 0.84);
+  background-size: 34px 34px;
+  filter: blur(24px) saturate(1.25);
+}
+
+.drawing-lightbox-panel {
+  max-height: min(82vh, 820px);
+}
+
+.drawing-placeholder-large {
+  min-height: min(62vh, 560px);
+  display: grid;
+  place-items: center;
+  color: var(--green);
+  background:
+    linear-gradient(135deg, rgba(79, 209, 183, 0.12), transparent 48%),
+    rgba(3, 5, 12, 0.56);
+}
+
 .spotify-widget {
   display: grid;
   grid-template-columns: 118px minmax(0, 1fr);
