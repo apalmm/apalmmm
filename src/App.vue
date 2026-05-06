@@ -285,7 +285,7 @@ watch(activeSection, async (section) => {
         <div class="profile-header"></div>
 
         <div class="photo-slot">
-          <img :src="'/public/profile_pic.jpg'" alt="Profile photo" />
+          <img :src="'public/profile_pic.jpg'" alt="Profile photo" />
         </div>
 
         <div class="profile-copy">
