@@ -353,6 +353,27 @@ watch(activeSection, async (section) => {
             </dl>
           </template>
         </Card>
+        <!-- <Card>
+          <template #title>
+            <span class="card-title"><Sparkles :size="18" />Interests</span>
+          </template>
+          <template #content>
+            <dl class="details-list">
+              <div>
+                <dt>Location</dt>
+                <dd>New Haven, CT</dd>
+              </div>
+              <div>
+                <dt>Focus</dt>
+                <dd>Full-stack, mobile, games, research</dd>
+              </div>
+              <div>
+                <dt>Stack</dt>
+                <dd>JavaScript, Python, C/C++, Swift</dd>
+              </div>
+            </dl>
+          </template>
+        </Card> -->
 
         <!-- <Card class="terminal-card">
           <template #title>Guestbook</template>
@@ -492,7 +513,7 @@ watch(activeSection, async (section) => {
 
         <section id="bio" class="section-panel bio-panel" data-reveal>
           <header class="section-heading">
-            <span><AtSign :size="20" /> Bio Snippet</span>
+            <span><AtSign :size="25" /> Bio</span>
           </header>
           <p>
             I am a recent Yale computer science graduate and software engineer
